@@ -2,7 +2,11 @@ import os
 from ament_index_python.packages import get_package_share_directory
 from launch import LaunchDescription
 from launch_ros.actions import Node
+
+# To run xacro commands at launch time
 from launch.substitutions import Command
+
+# To include other launch files
 from launch.actions import IncludeLaunchDescription
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 
@@ -18,14 +22,15 @@ def generate_launch_description():
     controller_config = os.path.join(pkg_bringup, 'config', 'controllers.yaml')
 
     # Robot State Publisher
+    # This publishes the transforms (TFs) from the URDF to the rest of ROS
     robot_state_publisher = Node(
         package='robot_state_publisher',
         executable='robot_state_publisher',
         name='robot_state_publisher',
         output='screen',
         parameters=[{
-            'use_sim_time': False,
-            'robot_description': Command(['xacro ', urdf_file])
+            'use_sim_time': False, # Set to True if you're running a simulation
+            'robot_description': Command(['xacro ', urdf_file]) # Run xacro and parse at launch time
         }]
     )
 
@@ -45,6 +50,7 @@ def generate_launch_description():
         output='screen'
     )
 
+    # Final launch description
     return LaunchDescription([
         robot_state_publisher,
         qube_driver_launch,
