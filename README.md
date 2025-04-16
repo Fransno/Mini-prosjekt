@@ -1,36 +1,64 @@
-> [!IMPORTANT]
-> This README is unfinished and below is just a unfinished semi-edited template originating from https://www.makeareadme.com/
+# Qube Mini-Project
 
-# Foobar
+This project is a ROS2-based implementation for controlling a Quanser Qube via simulation and with hardware. The system combines URDF modeling, ROS2 Control integration, and a custom PID controller for real-time control and visualization in RViz.
 
-Foobar is a Python library for dealing with word pluralization.
+## Packages
 
-## Installation
+### `qube_description`
+Contains the geometric and visual description of the Qube using URDF/Xacro.
+- **`qube.macro.xacro`**: Macro definition of the Qube model
+- **`qube.urdf.xacro`**: Simple scene placing the Qube in the world
+- **Launch**: `view_qube.launch.py` visualizes the Qube in RViz with slider controls
 
-Use the package manager [pip](https://pip.pypa.io/en/stable/) to install foobar.
+### `qube_driver`
+ROS2 Control interface to the physical Qube hardware.
+- Uses USB/serial connection to a Teensy board
+- Downloaded from external repo: [`qube_driver`](https://github.com/adamleon/qube_driver)
 
-```bash
-pip install foobar
-```
+### `qube_bringup`
+Launches the full system: model, driver, controllers, and visualization.
+- **`controlled_qube.urdf.xacro`**: URDF including ROS2 control macros
+- **`bringup.launch.py`**: Starts robot_state_publisher, controller manager, joint_state_broadcaster, velocity controller, and RViz
+- **`controllers.yaml`**: Configuration file for controller types and PID gains
+
+### `qube_controller`
+Custom ROS2 node that implements a PID controller.
+- **`pid_controller.cpp`**: The PID algorithm itself
+- **`pid_controller_node.cpp`**: ROS2 node that subscribes to `/joint_states` and publishes to `/velocity_controller/commands`
+- Parameters can be configured via ROS2 parameter server
 
 ## Usage
 
-```console
+### Step 1: Building the Workspace
+
+Navigate to your workspace root : 
 cd BRANCH-NAME
+
+Source the setup file :
 source install/setup.bash
-colcon build  # Only use after change in code (build command)
 
-ros2 launch qube_bringup bringup.launch.py  # Start program
+Build the packages (only needed after code changes) :
+colcon build --symlink-install
 
-ros2 run qube_controller pid_controller_node   # Start PID controller
+### Step 2: Running the System
 
+Launch the complete system (model, controllers, and visualization) :
+ros2 launch qube_bringup bringup.launch.py
 
-ros2 topic echo /joint_states  # Optional, see publishing information
+In a separate terminal, start the PID controller :
+ros2 run qube_controller pid_controller_node
 
-ros2 topic echo /velocity_controller/commands  # Optional, see subscribing information
+### Step 3: Monitering the Topics
 
+View joint states (position, velocity, effort) :
+ros2 topic echo /joint_states
 
-# Publishing command (changes position of spinning disk)
+View controller commands being sent :
+ros2 topic echo /velocity_controller/commands
+
+### Sending Manual Commands
+
+Send a velocity command to the controller :
 ros2 topic pub --once /velocity_controller/commands std_msgs/msg/Float64MultiArray "
 layout:
   dim:
@@ -38,18 +66,21 @@ layout:
     size: 1
     stride: 1
   data_offset: 0
-data: [0.5]  # Your desired value here
+data: [0.5]  # Adjust this value as needed
 "
 
-```
+### Configuration
 
-## Contributing
+You can adjust PID parameters during runtime using :
 
-Pull requests are welcome. For major changes, please open an issue first
-to discuss what you would like to change.
+ros2 param set /pid_controller_node Kp 1.0
+ros2 param set /pid_controller_node Ki 0.1
+ros2 param set /pid_controller_node Kd 0.01
 
-Please make sure to update tests as appropriate.
+#### Troubleshooting 
 
-## License
+If you encounter issues:
 
-[MIT](https://choosealicense.com/licenses/mit/)
+Verify all packages are built (colcon list)
+Check node status with : ros2 node list
+Examine topic connections with : ros2 topic list -t
