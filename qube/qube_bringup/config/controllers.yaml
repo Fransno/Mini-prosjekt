@@ -2,11 +2,17 @@ controller_manager:
   ros__parameters:
     update_rate: 100  # Hz
 
+    # Publishes joint state data (position, velocity, effort) to /joint_states
     joint_state_broadcaster:
       type: joint_state_broadcaster/JointStateBroadcaster
 
+    # Sends velocity commands to specified joints
     velocity_controller:
       type: velocity_controllers/JointGroupVelocityController
+
+      # List of joints this controller manages
       joints: [motor_joint, indicator_joint]
+
+      # Gains for PID-based velocity control
       gains:
         motor_joint: {p: 1.0, i: 0.1, d: 0.01}
