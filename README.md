@@ -38,7 +38,7 @@ Source the setup file :
 ```source install/setup.bash```
 
 Build the packages (only needed after code changes) :
-```colcon build --symlink-install```
+```colcon build```
 
 ### Step 2: Running the System
 
