@@ -25,7 +25,6 @@ Launches the full system: model, driver, controllers, and visualization.
 Custom ROS2 node that implements a PID controller.
 - **`pid_controller.cpp`**: The PID algorithm itself
 - **`pid_controller_node.cpp`**: ROS2 node that subscribes to `/joint_states` and publishes to `/velocity_controller/commands`
-- Parameters can be configured via ROS2 parameter server
 
 ## Usage
 
@@ -69,15 +68,6 @@ layout:
   data_offset: 0
 data: [0.5]  # Adjust this value as needed
 "
-```
-
-### Configuration
-
-You can adjust PID parameters during runtime using :
-```
-ros2 param set /pid_controller_node Kp 1.0
-ros2 param set /pid_controller_node Ki 0.1
-ros2 param set /pid_controller_node Kd 0.01
 ```
 #### Troubleshooting 
 
