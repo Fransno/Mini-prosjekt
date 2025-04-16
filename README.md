@@ -32,33 +32,34 @@ Custom ROS2 node that implements a PID controller.
 ### Step 1: Building the Workspace
 
 Navigate to your workspace root : 
-cd BRANCH-NAME
+```cd BRANCH-NAME```
 
 Source the setup file :
-source install/setup.bash
+```source install/setup.bash```
 
 Build the packages (only needed after code changes) :
-colcon build --symlink-install
+```colcon build --symlink-install```
 
 ### Step 2: Running the System
 
 Launch the complete system (model, controllers, and visualization) :
-ros2 launch qube_bringup bringup.launch.py
+```ros2 launch qube_bringup bringup.launch.py```
 
 In a separate terminal, start the PID controller :
-ros2 run qube_controller pid_controller_node
+```ros2 run qube_controller pid_controller_node```
 
 ### Step 3: Monitering the Topics
 
 View joint states (position, velocity, effort) :
-ros2 topic echo /joint_states
+```ros2 topic echo /joint_states```
 
 View controller commands being sent :
-ros2 topic echo /velocity_controller/commands
+```ros2 topic echo /velocity_controller/commands```
 
 ### Sending Manual Commands
 
 Send a velocity command to the controller :
+```
 ros2 topic pub --once /velocity_controller/commands std_msgs/msg/Float64MultiArray "
 layout:
   dim:
@@ -68,19 +69,20 @@ layout:
   data_offset: 0
 data: [0.5]  # Adjust this value as needed
 "
+```
 
 ### Configuration
 
 You can adjust PID parameters during runtime using :
-
+```
 ros2 param set /pid_controller_node Kp 1.0
 ros2 param set /pid_controller_node Ki 0.1
 ros2 param set /pid_controller_node Kd 0.01
-
+```
 #### Troubleshooting 
 
 If you encounter issues:
 
 Verify all packages are built (colcon list)
-Check node status with : ros2 node list
-Examine topic connections with : ros2 topic list -t
+Check node status with : `ros2 node list`
+Examine topic connections with : `ros2 topic list -t`
