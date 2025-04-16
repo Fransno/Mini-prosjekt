@@ -83,6 +83,6 @@ ros2 param set /pid_controller_node Kd 0.01
 
 If you encounter issues:
 
-- Verify all packages are built (colcon list)   
+- Verify all packages are built (`colcon list`)   
 - Check node status with : `ros2 node list`   
 - Examine topic connections with : `ros2 topic list -t`   
