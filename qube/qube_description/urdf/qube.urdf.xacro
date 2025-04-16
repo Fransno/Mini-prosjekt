@@ -1,5 +1,10 @@
 <?xml version="1.0"?>
 <robot name="qube" xmlns:xacro="http://www.ros.org/wiki/xacro">
+  <!-- 
+    This file defines the top-level Qube robot model using xacro.
+    It includes the macro that builds the Qube and instantiates it.
+  -->
+
   <xacro:include filename="$(find qube_description)/urdf/qube.macro.xacro"/>
 
   <!-- Instantiate the qube macro to place the Qube -->
