@@ -1,13 +1,23 @@
 <?xml version="1.0"?>
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+  <!-- 
+    Macro that defines the geometry and kinematics of the Quanser Qube.
+    Includes:
+    - A black base cube
+    - A red spinning disk mounted on top
+    - A white indicator fixed to the disk
+    - A continuous joint (motor_joint) and a fixed joint (indicator_joint)
+  -->
+
   <xacro:macro name="qube">
   <!-- Parameters -->
-    <xacro:property name="box_size" value="0.1" />
-    <xacro:property name="disk_radius" value="0.025" />
-    <xacro:property name="disk_height" value="0.01" />
-    <xacro:property name="indicator_length" value="0.025" />
-    <xacro:property name="indicator_width" value="0.002" />
-    <xacro:property name="indicator_height" value="0.001" />
+    <xacro:property name="box_size" value="0.1" />  <!-- Size of the black base cube (10 cm) -->
+    <xacro:property name="disk_radius" value="0.025" />  <!-- Radius of the red spinning disk (2.5 cm) -->
+    <xacro:property name="disk_height" value="0.01" />  <!-- Thickness of the disk (1 cm) -->
+    <xacro:property name="indicator_length" value="0.025" />  <!-- Length of the indicator (2.5 cm) -->
+    <xacro:property name="indicator_width" value="0.002" />  <!-- Width of the indicator strip -->
+    <xacro:property name="indicator_height" value="0.001" />  <!-- Thickness of the indicator -->
     
     <!-- Cube -->
     <link name="base_link">
@@ -41,7 +51,10 @@
       </visual>
     </link>
 
-    <!-- Motor joint -->
+
+    <!-- Motor joint, Connects base to spinning disk.
+         Rotates around Z-axis (0 0 -1). -->
+
     <joint name="motor_joint" type="continuous">
       <parent link="base_link"/>
       <child link="spinning_disk"/>
@@ -49,7 +62,7 @@
       <axis xyz="0 0 -1"/>
     </joint>
 
-    <!-- Disk joint-->
+    <!-- Disk joint, fixed joint attaching white indicator to the red disk.-->
     <joint name="indicator_joint" type="fixed">
       <parent link="spinning_disk"/>
       <child link="disk_indicator"/>
