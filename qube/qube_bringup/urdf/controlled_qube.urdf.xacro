@@ -1,0 +1,26 @@
+<?xml version="1.0"?>
+<robot name="controlled_qube" xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+  <!-- Arguments -->
+  <xacro:arg name="baud_rate" default="115200"/>
+  <xacro:arg name="device" default="/dev/ttyACM0"/>
+  <xacro:arg name="simulation" default="true"/>
+
+  <!-- Include base Qube URDF -->
+  <xacro:include filename="$(find qube_description)/urdf/qube.urdf.xacro"/>
+  
+  <!-- Include ROS2 Control interface -->
+  <xacro:include filename="$(find qube_driver)/ros2_control/qube_driver.ros2_control.xacro"/>
+
+  <!-- Create Qube instance -->
+  <!-- xacro:qube prefix=""/ -->
+
+  <!-- Setup ROS2 Control -->
+  <xacro:qube_driver_ros2_control 
+    name="qube_driver" 
+    prefix=""
+    baud_rate="$(arg baud_rate)"
+    device="$(arg device)"
+    simulation="$(arg simulation)"/>
+
+</robot>

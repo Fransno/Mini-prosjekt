@@ -1,0 +1,60 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+  <xacro:macro name="qube">
+  <!-- Parameters -->
+    <xacro:property name="box_size" value="0.1" />
+    <xacro:property name="disk_radius" value="0.025" />
+    <xacro:property name="disk_height" value="0.01" />
+    <xacro:property name="indicator_length" value="0.025" />
+    <xacro:property name="indicator_width" value="0.002" />
+    <xacro:property name="indicator_height" value="0.001" />
+    
+    <!-- Cube -->
+    <link name="base_link">
+      <visual>
+        <geometry><box size="${box_size} ${box_size} ${box_size}"/></geometry>
+        <material name="black"><color rgba="0 0 0 1"/></material>
+      </visual>
+    </link>
+
+    <!-- Spinning disk -->
+    <link name="spinning_disk">
+      <visual name="disk">
+        <geometry>
+          <cylinder radius="${disk_radius}" length="${disk_height}"/>
+        </geometry>
+        <material name="red">
+          <color rgba="1 0 0 1"/>
+        </material>
+      </visual>
+    </link>
+
+    <!-- Indicator -->
+    <link name="disk_indicator">
+      <visual>
+        <geometry>
+          <box size="${indicator_length} ${indicator_width} ${indicator_height}"/>
+        </geometry>
+        <material name="white">
+          <color rgba="1 1 1 1"/>
+        </material>
+      </visual>
+    </link>
+
+    <!-- Motor joint -->
+    <joint name="motor_joint" type="continuous">
+      <parent link="base_link"/>
+      <child link="spinning_disk"/>
+      <origin xyz="0 0 ${box_size/2 + disk_height/2}" rpy="0 0 0"/>
+      <axis xyz="0 0 -1"/>
+    </joint>
+
+    <!-- Disk joint-->
+    <joint name="indicator_joint" type="fixed">
+      <parent link="spinning_disk"/>
+      <child link="disk_indicator"/>
+      <origin xyz="${disk_radius - indicator_length/2} 0 ${disk_height/2 + indicator_height/2}" rpy="0 0 0"/>
+    </joint>
+
+  </xacro:macro>
+</robot>
