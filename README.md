@@ -1,3 +1,6 @@
+> [!IMPORTANT]
+> This README is unfinished and below is just a unfinished semi-edited template originating from https://www.makeareadme.com/
+
 # Foobar
 
 Foobar is a Python library for dealing with word pluralization.
@@ -12,17 +15,32 @@ pip install foobar
 
 ## Usage
 
-```python
-import foobar
+```console
+cd BRANCH-NAME
+source install/setup.bash
+colcon build  # Only use after change in code (build command)
 
-# returns 'words'
-foobar.pluralize('word')
+ros2 launch qube_bringup bringup.launch.py  # Start program
 
-# returns 'geese'
-foobar.pluralize('goose')
+ros2 run qube_controller pid_controller_node   # Start PID controller
 
-# returns 'phenomenon'
-foobar.singularize('phenomena')
+
+ros2 topic echo /joint_states  # Optional, see publishing information
+
+ros2 topic echo /velocity_controller/commands  # Optional, see subscribing information
+
+
+# Publishing command (changes position of spinning disk)
+ros2 topic pub --once /velocity_controller/commands std_msgs/msg/Float64MultiArray "
+layout:
+  dim:
+  - label: velocity
+    size: 1
+    stride: 1
+  data_offset: 0
+data: [0.5]  # Your desired value here
+"
+
 ```
 
 ## Contributing
