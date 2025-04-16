@@ -32,33 +32,34 @@ void PIDControllerNode::joint_states_listener(const sensor_msgs::msg::JointState
         return;
     }
 
-    // Hent både posisjon og hastighet
+    // Extract position and velocity from the joint state 
     double position = msg->position[0];
     double velocity = msg->velocity[0];
     
-    // Beregn hastighetskommando med både posisjon og hastighet
+    // Use PID controller to compute velocity command 
     double velocity_command = pid_controller_->update(position, velocity);
 
     auto velocity_msg = std_msgs::msg::Float64MultiArray();
     
-    // Sett opp layout (valgfritt, men anbefalt)
+    // Optional: define layout for clarity/debugging tools
     velocity_msg.layout.dim.push_back(std_msgs::msg::MultiArrayDimension());
     velocity_msg.layout.dim[0].label = "velocity";
     velocity_msg.layout.dim[0].size = 1;
     velocity_msg.layout.dim[0].stride = 1;
     
-    // Legg til data
+    // Set data
     velocity_msg.data.push_back(velocity_command);
 
-    // Publiser hastighetskommandoen
+    // Publish the velocity command
     velocity_publisher_->publish(velocity_msg);
 
-    // Logg for debugging (valgfritt)
+    // Optional debug logging
     RCLCPP_DEBUG(this->get_logger(), 
                 "Position: %.3f, Velocity: %.3f, Command: %.3f",
                 position, velocity, velocity_command);
 }
 
+// Standard ROS2 main function
 int main(int argc, char **argv) {
     rclcpp::init(argc, argv);
     auto node = std::make_shared<PIDControllerNode>();
