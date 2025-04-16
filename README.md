@@ -18,7 +18,7 @@ ROS2 Control interface to the physical Qube hardware.
 ### `qube_bringup`
 Launches the full system: model, driver, controllers, and visualization.
 - **`controlled_qube.urdf.xacro`**: URDF including ROS2 control macros
-- **`bringup.launch.py`**: Starts robot_state_publisher, controller manager, joint_state_broadcaster, velocity controller, and RViz
+- **`bringup.launch.py`**: Starts robot_state_publisher, controller manager, joint_state_broadcaster, velocity controller, and RViz. Supports dynamic hardware parameter configuration via launch arguments.
 - **`controllers.yaml`**: Configuration file for controller types and PID gains
 
 ### `qube_controller`
@@ -68,6 +68,15 @@ layout:
   data_offset: 0
 data: [0.5]  # Adjust this value as needed
 "
+```
+
+### Configuration
+All critical hardware parameters can be changed without code modifications when launching (example):
+```
+ros2 launch qube_bringup bringup.launch.py \
+    device:=/dev/ttyUSB0 \    # Change serial device (default: /dev/ttyACM0)
+    baud_rate:=57600 \        # Change baud rate (default: 115200)
+    simulation:=false         # Toggle hardware/simulation mode (default: true)
 ```
 #### Troubleshooting 
 
