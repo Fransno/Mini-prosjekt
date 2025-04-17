@@ -6,19 +6,19 @@ This project is a ROS2-based implementation for controlling a Quanser Qube via s
 
 ### `qube_description`
 Contains the geometric and visual description of the Qube using URDF/Xacro.
-- **`qube.macro.xacro`**: Macro definition of the Qube model
-- **`qube.urdf.xacro`**: Simple scene placing the Qube in the world
-- **Launch**: `view_qube.launch.py` visualizes the Qube in RViz with slider controls
+- **`qube.macro.xacro`**: Macro definition of the Qube model. Contains reusable parts of the model such as the base cube, spinning disk, and indicator. It serves as a template to create a Qube instance with different properties.
+- **`qube.urdf.xacro`**: Simple scene placing the Qube in the world. Defines the Qube robot with some default properties (e.g., size, color) and is used for visualization and simulation.
+- **Launch**: `view_qube.launch.py` visualizes the Qube in RViz with slider controls.
 
 ### `qube_driver`
 ROS2 Control interface to the physical Qube hardware.
-- Uses USB/serial connection to a Teensy board
+- Provides ROS2-compatible hardware interface for controlling the Qube hardware. This includes controlling the motor and reading the state of the robot (e.g., position, velocity). Uses USB/serial connection to a Teensy board
 - Downloaded from external repo: [`qube_driver`](https://github.com/adamleon/qube_driver)
 
 ### `qube_bringup`
 Launches the full system: model, driver, controllers, and visualization.
-- **`controlled_qube.urdf.xacro`**: URDF including ROS2 control macros
-- **`bringup.launch.py`**: Starts robot_state_publisher, controller manager, joint_state_broadcaster, velocity controller, and RViz. Supports dynamic hardware parameter configuration via launch arguments.
+- **`controlled_qube.urdf.xacro`**: A modified version of the Qube URDF, incorporating ROS2 control macros to interface with hardware or simulation. 
+- **`bringup.launch.py`**: Starts robot_state_publisher, joint_state_broadcaster, controllers and RViz. Supports dynamic hardware parameter configuration via launch arguments.
 - **`controllers.yaml`**: Configuration file for controller types and PID gains
 
 ### `qube_controller`
@@ -71,7 +71,9 @@ data: [0.5]  # Adjust this value as needed
 ```
 
 ### Configuration
-All critical hardware parameters can be changed without code modifications when launching (example):
+You can change critical hardware parameters without modifying the code when launching the system.
+
+1. Change hardware parameters at launch:
 ```
 ros2 launch qube_bringup bringup.launch.py \
     device:=/dev/ttyUSB0 \    # Change serial device (default: /dev/ttyACM0)
@@ -79,7 +81,7 @@ ros2 launch qube_bringup bringup.launch.py \
     simulation:=false         # Toggle hardware/simulation mode (default: true)
 ```
 
-PID parameter change (example):
+2. Change PID parameters during runtime using ros2 param:
 ```
 ros2 param set /pid_controller_node p 0.8  
 ros2 param set /pid_controller_node i 0.05  
