@@ -8,20 +8,11 @@ PIDController::PIDController(double p, double i, double d, double reference):
 // Takes the current measured position and velocity
 // Returns the control output (velocity command)
 double PIDController::update(double measured_value, double measured_velocity) {
-    const double dt = 0.01; // Assumed fixed timestep (seconds) 
-    
-    // Compute position error relative to reference setpoint
+    const double dt = 0.01;
     double error = reference_ - measured_value;
-    integral_ += error * dt; 
-
-    // Use velocity directly as a measure of derivative (avoids using previous error)
-    // Negative sign because velocity is the rate of change of position
+    integral_ += error * dt;
     double derivative = -measured_velocity;
-
-    // Standard PID formula
     output_ = p_ * error + i_ * integral_ + d_ * derivative;
-
-    // Store current error
     previous_error_ = error;
     
     return output_;
