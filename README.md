@@ -78,6 +78,14 @@ ros2 launch qube_bringup bringup.launch.py \
     baud_rate:=57600 \        # Change baud rate (default: 115200)
     simulation:=false         # Toggle hardware/simulation mode (default: true)
 ```
+
+PID parameter change (example):
+```
+ros2 param set /pid_controller_node p 0.8  
+ros2 param set /pid_controller_node i 0.05  
+ros2 param set /pid_controller_node d 0.01  
+ros2 param set /pid_controller_node reference 1.0  
+```
 #### Troubleshooting 
 
 If you encounter issues:
