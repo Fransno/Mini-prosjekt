@@ -1,32 +1,27 @@
 #ifndef PID_CONTROLLER_HPP
 #define PID_CONTROLLER_HPP
 
-// Simple PID controller class for controlling velocity based on joint state feedback
 class PIDController {
 public:
-
-    // Constructor, reference: desired setpoint (position)
     PIDController(double p, double i, double d, double reference);
-
-    // Update method
     double update(double measured_value, double measured_velocity);
 
+    // Getters for the PID parameters (optional, in case you need them)
+    double getP() const { return p_; }
+    double getI() const { return i_; }
+    double getD() const { return d_; }
+
+    void setP(double p) { p_ = p; }
+    void setI(double i) { i_ = i; }
+    void setD(double d) { d_ = d; }
+
 private:
-    // PID gains
     double p_;
     double i_;
     double d_;
-
-    // Desired reference value (setpoint)
     double reference_;
-
-    // Last computed control output
     double output_;
-
-    // Integral term accumulator
     double integral_;
-
-    // Previous error (not used in current implementation, but stored for future use)
     double previous_error_;
 };
 
